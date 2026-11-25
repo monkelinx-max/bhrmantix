@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>B-HRmantix — Het woord van de dag</title>
+<style>
+:root{--bg:#101923;--panel:#182633;--panel2:#213342;--ink:#f3f6f8;--muted:#a9bac7;--accent:#f0c34e;--line:#344858;--good:#55c69a}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at top,#1c3040,#101923 55%);color:var(--ink);font:16px/1.5 system-ui,-apple-system,Segoe UI,sans-serif}
+main{max-width:820px;margin:0 auto;padding:32px 18px 60px}.top{display:flex;justify-content:space-between;align-items:center;gap:12px}.brand{font-weight:850;font-size:clamp(26px,5vw,38px);letter-spacing:-1.5px}.brand span{color:var(--accent)}.pill{border:1px solid var(--line);color:var(--muted);padding:6px 10px;border-radius:99px;font-size:12px}
+.hero{text-align:center;padding:34px 0 24px}.eyebrow{color:var(--accent);font-size:12px;font-weight:800;letter-spacing:2px}.hero h1{font-size:clamp(27px,5vw,42px);line-height:1.1;margin:9px 0}.hero p{color:var(--muted);margin:8px auto;max-width:580px}
+.card{background:linear-gradient(145deg,#1b2b38,#172430);border:1px solid var(--line);border-radius:18px;padding:20px;margin:14px 0;box-shadow:0 14px 36px #0003}
+form{display:flex;gap:9px;margin-top:12px}input{min-width:0;flex:1;background:#0f1b25;border:1px solid #496072;border-radius:11px;padding:14px;color:var(--ink);font-size:16px;outline:none}input:focus{border-color:var(--accent)}
+button{border:0;border-radius:11px;background:var(--accent);color:#17212a;font-weight:800;padding:0 20px;cursor:pointer}button:hover{filter:brightness(1.06)}button:disabled{opacity:.45;cursor:not-allowed}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-top:16px}.stat{background:#0f1b25;border-radius:12px;padding:11px;text-align:center}.stat strong{display:block;font-size:22px}.stat small{color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.8px}
+.feedback{margin-top:14px;color:var(--muted);min-height:24px}.guesslist{width:100%;border-collapse:collapse;margin-top:8px}.guesslist th{text-align:left;color:var(--muted);font-size:12px;font-weight:600;padding:9px 6px;border-bottom:1px solid var(--line)}.guesslist td{padding:10px 6px;border-bottom:1px solid #2b3c49}.score{font-variant-numeric:tabular-nums;font-weight:800}.bar{height:7px;background:#0d1821;border-radius:9px;overflow:hidden;min-width:70px}.bar i{display:block;height:100%;border-radius:9px;background:linear-gradient(90deg,#477b9b,var(--accent))}
+.hint{color:var(--muted);font-size:13px}.foot{color:var(--muted);font-size:12px;text-align:center;margin-top:28px}.success{color:var(--good);font-weight:800}.how{display:grid;grid-template-columns:1fr 1fr;gap:12px}.how div{background:#0f1b25;padding:13px;border-radius:12px;color:var(--muted);font-size:13px}.how b{color:var(--ink);display:block;margin-bottom:3px}
+@media(max-width:560px){form{flex-direction:column}form button{padding:13px}.how{grid-template-columns:1fr}.card{padding:16px}.stats{gap:6px}.stat strong{font-size:19px}}
+</style></head>
+<body><main>
+<div class="top"><div class="brand">B-HR<span>mantix</span></div><div class="pill">NL + FR · NMBS & HR</div></div>
+<section class="hero"><div class="eyebrow">HET WOORD VAN DE DAG · LE MOT DU JOUR</div><h1>Vind het verborgen begrip.</h1><p>Een woord uit de wereld van NMBS, HR, werk en organisatie. Raad in het Nederlands of Frans — elke poging brengt je dichterbij.</p></section>
+<section class="card">
+<div style="display:flex;justify-content:space-between;gap:10px;align-items:center"><b>Jouw gok / Votre proposition</b><span class="hint" id="date"></span></div>
+<form id="guessForm"><input id="guess" autocomplete="off" placeholder="Bijv. opleiding, recrutement…" aria-label="Jouw gok"><button type="submit">Probeer</button></form>
+<div class="feedback" id="feedback" aria-live="polite">Typ een woord en druk op Probeer.</div>
+<div class="stats"><div class="stat"><strong id="count">0</strong><small>Pogingen</small></div><div class="stat"><strong id="best">—</strong><small>Beste score</small></div><div class="stat"><strong id="rank">—</strong><small>Beste positie</small></div></div>
+</section>
+<section class="card"><div style="display:flex;justify-content:space-between;align-items:center"><b>Jouw pogingen</b><span class="hint">Warm = dichterbij</span></div>
+<table class="guesslist"><thead><tr><th>Woord</th><th>Gelijkenis</th><th style="width:34%">Afstand</th></tr></thead><tbody id="rows"><tr><td colspan="3" class="hint">Je pogingen verschijnen hier.</td></tr></tbody></table>
+</section>
+<section class="card"><b>Hoe speel je?</b><div class="how" style="margin-top:12px"><div><b>1. Raad vrijuit</b>Gebruik Nederlandse of Franse woorden. Accenten en hoofdletters maken niet uit.</div><div><b>2. Lees de score</b>De score geeft aan hoe sterk je gok inhoudelijk verwant is aan het doelwoord.</div><div><b>3. Zoek verbanden</b>Denk aan functies, processen, mensen, opleiding, spoorweg en organisatie.</div><div><b>4. Deel de uitdaging</b>Iedereen speelt dezelfde dagelijkse puzzel op basis van de datum.</div></div></section>
+<p class="foot">Eerste speelbare prototype · Scores zijn gebaseerd op een ingebouwde tweetalige begrippengrafiek, niet op het officiële Cemantix-model. Pogingen worden lokaal in deze browser bewaard.</p>
+</main>
+<script>
+const concepts = [
+ {id:"recruitment",words:["rekrutering","recrutement","aanwerving","recruitment","werving","embauche","recruteur","recrute","sollicitatie","candidature","vacature","offre d emploi","selectie","selection"],links:["hr","people","career","organization"],weight:1},
+ {id:"training",words:["opleiding","formation","trainings","training","apprentissage","leren","learning","competentie","competence","vaardigheid","skill","kennis","savoir","instructeur","formateur"],links:["hr","people","career","development"],weight:1},
+ {id:"career",words:["loopbaan","carriere","carrière","carrièrepad","mobiliteit","mobilite","mobilité","promotie","promotion","doorgroei","evolutie","evolution","ontwikkeling","developpement","développement"],links:["hr","people","development","organization"],weight:1},
+ {id:"contract",words:["contract","contrat","arbeidsovereenkomst","overeenkomst","convention","statuut","statut","vastbenoemd","contractueel","juridisch","legal","arbeidsrecht","droit du travail"],links:["hr","organization","admin"],weight:1},
+ {id:"planning",words:["planning","dienstregeling","horaire","rooster","horaire de travail","shift","dienst","prestation","prestaties","werkrooster","planification","bezetting","effectif"],links:["rail","organization","operations"],weight:1},
+ {id:"absence",words:["afwezigheid","absence","ziekte","maladie","verlof","congé","conge","vakantie","congé annuel","attest","attestation","reintegratie","reintegratie","reprise"],links:["hr","people","admin"],weight:1},
+ {id:"payroll",words:["loon","salaire","wedde","paie","payroll","vergoeding","remuneration","rémunération","loonbrief","fiche de paie","barema","barème","indexatie"],links:["hr","admin","finance"],weight:1},
+ {id:"wellbeing",words:["welzijn","bien etre","bien-être","wellbeing","motivation","motivatie","engagement","betrokkenheid","burnout","burn out","stress","veiligheid","securite","sécurité"],links:["hr","people","development"],weight:1},
+ {id:"rail",words:["spoorweg","chemin de fer","trein","train","treinbestuurder","conducteur","machinist","treinbegeleider","accompagnateur","station","gare","spoor","voie","locomotief","locomotive"],links:["rail","operations","organization"],weight:1},
+ {id:"operations",words:["exploitatie","exploitation","verkeer","circulation","dispatching","sein","signal","veiligheidsprocedure","procedure","procedure de securite","procédure","interventie","intervention"],links:["rail","operations","planning"],weight:1},
+ {id:"organization",words:["organisatie","organisation","management","beheer","gestion","structuur","structure","directie","direction","leidinggevende","manager","team","equipe","équipe","afdeling","departement","département"],links:["hr","organization","admin"],weight:1},
+ {id:"admin",words:["administratie","administration","personeelsdienst","service du personnel","dossier","document","documenten","gegevens","data","systeem","systeme","système","sap","fiori","procedure"],links:["hr","organization","finance"],weight:1},
+ {id:"people",words:["personeel","personnel","medewerker","collaborateur","werknemer","travailleur","collega","collegue","collègue","mens","humain","menselijk","humain","team","equipe","équipe"],links:["hr","people","organization"],weight:1},
+ {id:"development",words:["ontwikkeling","developpement","développement","talent","potentieel","potentiel","coaching","mentor","feedback","evaluatie","evaluation","évaluation","beoordeling","assessment"],links:["hr","people","career","training"],weight:1}
+];
+const targets=["recruitment","training","career","contract","planning","absence","payroll","wellbeing","rail","operations","organization","admin","people","development"];
+const aliases={
+ recruitment:["rekrutering","recrutement","aanwerving"],training:["opleiding","formation"],career:["loopbaan","carrière"],contract:["contract","contrat"],planning:["planning","dienstregeling"],absence:["afwezigheid","absence"],payroll:["loon","salaire"],wellbeing:["welzijn","bien-être"],rail:["spoorweg","chemin de fer"],operations:["exploitatie","exploitation"],organization:["organisatie","organisation"],admin:["administratie","administration"],people:["personeel","personnel"],development:["ontwikkeling","développement"]
+};
+function norm(s){return s.toLocaleLowerCase("nl-BE").normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[’']/g," ").replace(/[^a-z0-9 ]/g," ").replace(/\s+/g," ").trim()}
+function dayIndex(){const d=new Date();return Math.floor(Date.UTC(d.getFullYear(),d.getMonth(),d.getDate())/86400000)}
+const targetId=targets[((dayIndex()*7+3)%targets.length)];
+const target=concepts.find(c=>c.id===targetId);
+document.getElementById("date").textContent=new Intl.DateTimeFormat("nl-BE",{day:"2-digit",month:"2-digit",year:"numeric"}).format(new Date());
+const known=new Map(); concepts.forEach(c=>c.words.forEach(w=>known.set(norm(w),c.id)));
+const seen=new Set();let guesses=[];
+function scoreWord(raw){
+ const w=norm(raw);if(!w)return null;
+ if(w===targetId || (aliases[targetId]||[]).map(norm).includes(w))return 100;
+ if(known.has(w)){
+   const c=concepts.find(x=>x.id===known.get(w));
+   if(c.id===targetId)return 100;
+   let score=18;
+   const overlap=c.links.filter(x=>target.links.includes(x)).length;
+   score+=overlap*12;
+   if(c.links.includes("hr")&&target.links.includes("hr"))score+=10;
+   if(c.links.includes("rail")&&target.links.includes("rail"))score+=12;
+   if(c.links.includes("people")&&target.links.includes("people"))score+=5;
+   return Math.min(88,score);
+ }
+ // Basic compositional fallback for related compounds and near-spellings.
+ const tokens=w.split(" ");
+ let best=5;
+ for(const c of concepts){for(const term of c.words){const t=norm(term);if(tokens.includes(t)||t.includes(w)||w.includes(t)){let v=c.id===targetId?76:20+(c.links.filter(x=>target.links.includes(x)).length*8);best=Math.max(best,v)}}}
+ return best;
+}
+function rank(s){if(s>=100)return "1/1000";if(s>=75)return "Top 50";if(s>=60)return "Top 100";if(s>=45)return "Top 250";if(s>=30)return "Top 500";return "—"}
+function render(){
+ document.getElementById("count").textContent=guesses.length;
+ const sorted=[...guesses].sort((a,b)=>b.score-a.score);
+ document.getElementById("best").textContent=sorted.length?sorted[0].score.toFixed(1):"—";
+ document.getElementById("rank").textContent=sorted.length?rank(sorted[0].score):"—";
+ const rows=document.getElementById("rows");rows.innerHTML="";
+ if(!sorted.length){rows.innerHTML='<tr><td colspan="3" class="hint">Je pogingen verschijnen hier.</td></tr>';return}
+ sorted.forEach(g=>{const tr=document.createElement("tr");const color=g.score>=75?"#55c69a":g.score>=45?"#f0c34e":"#8da2b2";tr.innerHTML=`<td>${g.word.replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]))}</td><td class="score" style="color:${color}">${g.score.toFixed(2)}</td><td><div class="bar"><i style="width:${g.score}%"></i></div></td>`;rows.appendChild(tr)})
+}
+document.getElementById("guessForm").addEventListener("submit",e=>{
+ e.preventDefault();const input=document.getElementById("guess"),word=input.value.trim(),key=norm(word),feedback=document.getElementById("feedback");
+ if(!key){feedback.textContent="Vul eerst een woord in.";return}
+ if(seen.has(key)){feedback.textContent="Dat woord heb je al geprobeerd.";return}
+ const s=scoreWord(word);if(s===null)return;
+ seen.add(key);guesses.push({word,score:s});render();input.value="";
+ if(s>=100){feedback.innerHTML='<span class="success">Gevonden! Bravo — het woord van vandaag is '+(aliases[targetId][0])+' / '+(aliases[targetId][1])+' .</span>'}
+ else if(s>=75)feedback.textContent="Heel warm! Je zit in de juiste betekenisvolle buurt.";
+ else if(s>=50)feedback.textContent="Warm. Zoek verder in deze richting.";
+ else if(s>=30)feedback.textContent="Lauw. Er is een verband, maar mogelijk een omweg.";
+ else feedback.textContent="Koud. Probeer een andere invalshoek.";
+});
+</script></body></html>
